@@ -1,7 +1,7 @@
 # Schema
 A CLI tool for working with the database | SQLite, libSQL, PostgreSQL, MySQL, MariaDB
 
-![schema](./docs/assets/schema.png)
+![schema](./doccs/assets/schema.png)
 
 ## Installation
 Install/upgrade latest version
@@ -116,13 +116,13 @@ schema -sql="0_insertdata.sql" -dir="inserts"
 ```shell
 schema -sql="SELECT * FROM users"
 ```
-![table](./docs/assets/table.png)
+![table](./doccs/assets/table.png)
 
 ## TUI SQL Studio
 ```shell
 schema -studio
 ```
-![studio](./docs/assets/studio.png)
+![studio](./doccs/assets/studio.png)
 
 ## Flags
 `v`: prints your version and latest version <br>
