@@ -1,7 +1,7 @@
 name: Feature Request
 description: Feature Request.
 labels: "enhancement"
-assignees: "gigagrug"
+assignees: "dbclerk"
 body:
   - type: markdown
     attributes:

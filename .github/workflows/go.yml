@@ -58,7 +58,7 @@ jobs:
           body: |
             Update by running:
             ```shell
-            curl -sSfL https://raw.githubusercontent.com/gigagrug/schema/main/install.sh | sh -s
+            curl -sSfL https://raw.githubusercontent.com/dbclerk/schema/main/install.sh | sh -s
             ```
           generate_release_notes: true
           files: dist/**/*

@@ -6,16 +6,16 @@ A CLI tool for working with the database | SQLite, libSQL, PostgreSQL, MySQL, Ma
 ## Installation
 Install/upgrade latest version
 ```shell
-curl -sSfL https://raw.githubusercontent.com/gigagrug/schema/main/install.sh | sh -s
+curl -sSfL https://raw.githubusercontent.com/dbclerk/schema/main/install.sh | sh -s
 ```
-Install specific version 
+Install specific version
 ```shell
-curl -sSfL https://raw.githubusercontent.com/gigagrug/schema/main/install.sh | sh -s 0.1.0
+curl -sSfL https://raw.githubusercontent.com/dbclerk/schema/main/install.sh | sh -s 0.1.0
 ```
 
 ## Get Started
 ### Step 1
-Init project (default: db=sqlite url=./schema/dev.db) 
+Init project (default: db=sqlite url=./schema/dev.db)
 ```shell
 schema -i
 ```
@@ -59,7 +59,7 @@ CREATE TABLE posts (
 );
 ```
 ### Step 3
-Migrates all the sql files not migrated 
+Migrates all the sql files not migrated
 ```shell
 schema -migrate
 ```
@@ -75,7 +75,7 @@ Doesn't save in _schema_migrations table if not in migrations dir so 
 schema -create="insertdata" -dir="inserts"
 ```
 ### Step 2
-Insert based on the SQL schema above. 
+Insert based on the SQL schema above.
 ```sql
 WITH RECURSIVE generate_users AS (
   SELECT ABS(RANDOM() % 10000) AS random_number, 1 AS row_number
@@ -85,9 +85,9 @@ WITH RECURSIVE generate_users AS (
   WHERE row_number < 5
 )
 INSERT INTO users (username, email, password)
-SELECT 
-  'user_' || random_number, 
-  'user_' || random_number || '@example.com', 
+SELECT
+  'user_' || random_number,
+  'user_' || random_number || '@example.com',
   'password'
 FROM generate_users;
 

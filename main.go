@@ -71,7 +71,7 @@ func main() {
 	if *v {
 		fmt.Println("Version:", version)
 
-		url := "https://api.github.com/repos/gigagrug/schema/releases/latest"
+		url := "https://api.github.com/repos/dbclerk/schema/releases/latest"
 		resp, err := http.Get(url)
 		if err != nil {
 			log.Fatalf("Error fetching release data from GitHub: %v\n", err)
@@ -96,7 +96,7 @@ func main() {
 
 		if version != latestVersion {
 			fmt.Printf("Outdated! Latest version: %s\n", latestVersion)
-			fmt.Printf("curl -sSfL https://raw.githubusercontent.com/gigagrug/schema/main/install.sh | sh -s\n")
+			fmt.Printf("curl -sSfL https://raw.githubusercontent.com/dbclerk/schema/main/install.sh | sh -s\n")
 		} else {
 			fmt.Println("Using latest version")
 		}
@@ -204,44 +204,42 @@ func main() {
 		}
 	}
 
-	if flagUsed("db") {
-		if _, err := os.Stat(schemaPath); err == nil {
-			file, err := os.OpenFile(schemaPath, os.O_RDWR, 0600)
-			if err != nil {
-				log.Fatalf("Error opening db.schema file: %v\n", err)
-			}
-			defer file.Close()
+	if !flagUsed("db") {
+	return
+}
 
-			scanner := bufio.NewScanner(file)
-			var lines []string
-			var found bool
-			for scanner.Scan() {
-				line := scanner.Text()
-				if strings.HasPrefix(line, "db = ") {
-					lines = append(lines, fmt.Sprintf(`db = "%s"`, *db))
-					found = true
-				} else {
-					lines = append(lines, line)
-				}
-			}
-			if !found {
-				lines = append(lines, fmt.Sprintf(`db = "%s"`, *db))
-				fmt.Println("db not found")
-			}
+if _, err := os.Stat(schemaPath); err != nil {
+	log.Fatalf("db.schema file does not exist: %v\n", err)
+}
 
-			file.Seek(0, 0)
-			file.Truncate(0)
-			for _, line := range lines {
-				_, err := file.WriteString(line + "\n")
-				if err != nil {
-					log.Fatalf("Error writing to db.schema file: %v\n", err)
-				}
-			}
-		} else {
-			log.Fatalf("db.schema file does not exist.\n")
-		}
-		return
+content, err := os.ReadFile(schemaPath)
+if err != nil {
+	log.Fatalf("Error reading db.schema file: %v\n", err)
+}
+
+lines := strings.Split(string(content), "\n")
+newDbLine := fmt.Sprintf(`db = "%s"`, *db)
+
+var found bool
+for i, line := range lines {
+	if strings.HasPrefix(line, "db = ") {
+		lines[i] = newDbLine
+		found = true
+		break
 	}
+}
+
+if !found {
+	lines = append(lines, newDbLine)
+	fmt.Println("db line not found in file. Appended new one.")
+}
+
+output := strings.Join(lines, "\n")
+
+if err := os.WriteFile(schemaPath, []byte(output), 0600); err != nil {
+	log.Fatalf("Error writing to db.schema file: %v\n", err)
+}
+
 
 	conn, dbtype, err := Conn2DB(schemaPath)
 	if err != nil {
